@@ -1,0 +1,3 @@
+const graphqlResolver = {};
+
+export { graphqlResolver };
