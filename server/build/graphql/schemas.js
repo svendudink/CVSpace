@@ -1,4 +1,55 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var graphql_1 = require("graphql");
-exports.default = (0, graphql_1.buildSchema)("\n\n\n\ntype User {\n    _id: ID\n    emailAdress: String!\n    password: String\n    aboutCompany: String\n    companyName: String\n    phoneNumber: String\n    yourName: String\n    token: String!\n}\n\ntype AuthData {\n    token: String!\n    userId: String!\n}\n\ninput UserInputData {\n    emailAdress: String!\n    password: String!\n    aboutCompany: String\n    companyName: String\n    phoneNumber: String\n    yourName: String\n    logoLink: String\n    hashColor: String\n}\n\ntype ReturnData {\n    notDefined: String\n    mapArray: String\n    bulbIdList: String\n    eventList: String\n    availableBulbIdList: String\n}\n\ninput SetValuesData {\n    sendToAndroid: String\n    createLightFile: String\n    bulbMovement: String\n    bulbColours: String\n    readFileFromAndroid: String\n    mapping: String\n\n}\n\ninput SetMapData {\n    lat: String\n    lng: String\n    request: String\n    bulbId: String\n    bulbNumber: String\n    markerList: String\n    mapName: String\n    brightness: String\n    extended: String\n    \n}\n\n\ntype RootMutation {\n    ControlDevice(SetValues: SetValuesData): ReturnData\n    MapLamps(SetMap: SetMapData): ReturnData\n    createUser(userInput: UserInputData): User!\n}\n\ntype rootQuery {\n    viewDevices(which: String): ReturnData\n    login(emailAdress: String!, password:String!): AuthData!\n    idLogin(id:String!, token:String): User!\n}\n\n\n    schema {\n        query: rootQuery\n  mutation: RootMutation\n\n}");
+const graphql_1 = require("graphql");
+exports.default = (0, graphql_1.buildSchema)(`
+
+
+
+type User {
+   emailAdress: String
+    companyLogo: String
+    aboutCompany: String
+    companyName: String
+    phoneNumber: String
+    recruiterName: String
+    webColor1: String
+    webColor2: String
+    id: String
+    token: String
+}
+
+type AuthData {
+    token: String!
+    userId: String!
+}
+
+input UserInputData {
+    emailAdress: String
+    companyLogo: String
+    aboutCompany: String
+    companyName: String
+    phoneNumber: String
+    recruiterName: String
+    webColor1: String
+    webColor2: String
+    id: String
+    token: String
+}
+
+
+
+
+type RootMutation {
+    createUser(userInput: UserInputData): User!
+}
+
+type rootQuery {
+    login(token: String): User
+}
+
+
+    schema {
+        query: rootQuery
+  mutation: RootMutation
+
+}`);
