@@ -13,16 +13,18 @@ import graphqlSchema from "./graphql/schemas";
 import { graphqlHTTP } from "express-graphql";
 
 let corsOptions = {
-  origin: process.env.ORIGINS,
+  origin: "*",
+  credentials: true,
 };
-
-// Initial values
 const app = express();
-dotenv.config();
-app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
+// Initial values
+dotenv.config();
+app.use(cors(corsOptions));
+
 // Connect to mongo
+
 (async function () {
   try {
     await mongoose.connect(<string>process.env.MONGO_LOGIN);
@@ -33,8 +35,8 @@ app.use(bodyParser.json());
 })();
 
 // Listen to port
-app.listen(process.env.PORT, () => {
-  console.log(`server running on port: ${process.env.PORT}`);
+app.listen(8080, () => {
+  console.log(`server running on  xxx port: ${8080}`);
 });
 
 // GraphQL Route
