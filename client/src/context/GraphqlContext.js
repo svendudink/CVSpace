@@ -57,6 +57,7 @@ export const UserContextProvider = (props) => {
       .then((res) => res.json())
       .then((resData) => (userData.current = resData));
     setPersonalInfo(userData.current.data.login);
+    props.setCompanyName(userData.current.data.login.companyName);
   };
   return (
     <UserContext.Provider

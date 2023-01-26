@@ -21,7 +21,15 @@ const data = [
 
 function Projects() {
   return (
-    <div className="projectTable">
+    <div
+      style={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <table>
         <tr>
           <th>Project name</th>

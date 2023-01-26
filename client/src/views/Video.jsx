@@ -23,11 +23,14 @@ function Video(props) {
   const [img, setImg] = useState();
   const [play, { pause, duration, sound }] = useSound(myAudio);
   const [frame, setFrame] = useState(0);
+  const [loadReady, setLoadReady] = useState(false);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [pauseButtonPosition, setpauseButtonPosition] = useState(23 * 1.37);
 
-  const test = useImagePreloader(imgArr);
+  const preLoad = useImagePreloader(imgArr).imagesPreloaded;
+
+  console.log(preLoad);
 
   const myLocation = location.pathname.split("/")[1];
   console.log(myLocation);
@@ -35,7 +38,7 @@ function Video(props) {
   const playingButton = () => {
     console.log("test");
     (function loop() {
-      const frameNumber = Math.floor((sound.seek([]) / 44.4) * 1061);
+      let frameNumber = Math.floor((sound.seek([]) / 44.4) * 1061);
       setFrame(frameNumber);
       props.setFrames(frameNumber);
       setImg(imgArr[Math.floor((sound.seek([]) / 44.4) * 1061)]);
@@ -46,17 +49,31 @@ function Video(props) {
         setpauseButtonPosition(frameNumber * 1.37);
       }
       // Clicking on skills button
+
+      if (frameNumber > 715 && frameNumber < 720) {
+        navigate("/projects");
+      }
+
       if (frameNumber > 850 && frameNumber < 860) {
         navigate("/skills");
       }
 
-      setTimeout(
-        () => {
-          loop();
-        },
-        1000 / 23,
-        976
-      );
+      if (frameNumber > 930 && frameNumber < 935) {
+        navigate("/");
+      }
+
+      if (frameNumber >= 1061) {
+        frameNumber = 0;
+        setFrame(0);
+      } else {
+        setTimeout(
+          () => {
+            loop();
+          },
+          1000 / 24,
+          976
+        );
+      }
     })();
 
     if (isPlaying) {
@@ -70,39 +87,61 @@ function Video(props) {
 
   return (
     <div>
-      <div style={{ zIndex: "1000", position: "absolute" }}>
-        <img style={{ width: "100vw", height: "auto" }} src={img} alt="logo" />
-      </div>
+      {frame === 0 ? (
+        <></>
+      ) : (
+        <div style={{ zIndex: "1000", position: "absolute" }}>
+          <img
+            style={{ width: "100vw", height: "auto" }}
+            src={img}
+            alt="logo"
+          />
+        </div>
+      )}
 
       <div>
-        {myLocation === "recruiter" && (
-          <div
-            style={{
-              position: "absolute",
-              marginTop: "5vh",
-              marginLeft: `${82 - pauseButtonPosition}vw`,
-            }}
-          >
-            {isPlaying ? (
-              <img
-                style={{ width: "30vw", height: "auto" }}
-                src={pauseBtn}
-                alt="logo"
-              />
-            ) : (
-              <img
-                style={{ width: "30vw", height: "auto" }}
-                src={playBtn}
-                alt="logo"
-                onClick={playingButton}
-              />
-            )}
-          </div>
-        )}
+        {myLocation === "recruiter" &&
+          (preLoad ? (
+            <div
+              style={{
+                zIndex: "900",
+                position: "absolute",
+                marginTop: "5vh",
+                marginLeft: `${82 - pauseButtonPosition}vw`,
+              }}
+            >
+              {isPlaying ? (
+                <img
+                  style={{ zIndex: "900", width: "30vw", height: "auto" }}
+                  src={pauseBtn}
+                  alt="logo"
+                />
+              ) : (
+                <img
+                  style={{ zIndex: "900", width: "30vw", height: "auto" }}
+                  src={playBtn}
+                  alt="logo"
+                  onClick={playingButton}
+                />
+              )}
+            </div>
+          ) : (
+            <div
+              style={{
+                zIndex: "900",
+                position: "absolute",
+                marginTop: "50vh",
+                marginLeft: `${82 - pauseButtonPosition}vw`,
+              }}
+            >
+              LOADING
+            </div>
+          ))}
         <div>{frame}</div>
         {frame >= 350 && frame <= 390 && (
           <img
             style={{
+              zIndex: "900",
               width: "40vw",
               height: "auto",
               marginLeft: "55vw",
@@ -116,6 +155,7 @@ function Video(props) {
         {frame >= 450 && frame <= 500 && (
           <img
             style={{
+              zIndex: "900",
               width: "40vw",
               height: "auto",
               marginLeft: "55vw",
@@ -129,6 +169,7 @@ function Video(props) {
         {frame >= 630 && frame <= 680 && (
           <img
             style={{
+              zIndex: "900",
               width: "40vw",
               height: "auto",
               marginLeft: "55vw",
@@ -142,6 +183,7 @@ function Video(props) {
         {frame >= 940 && frame <= 1100 && (
           <img
             style={{
+              zIndex: "900",
               width: "20vw",
               height: "auto",
               marginLeft: "15vw",

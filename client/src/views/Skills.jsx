@@ -99,7 +99,7 @@ function Skills() {
       style={{
         width: "10vw",
         height: "auto",
-        border: "5px solid green",
+        border: `5px solid green`,
         padding: "50px",
         margin: "20px",
         marginLeft: "80vw",
