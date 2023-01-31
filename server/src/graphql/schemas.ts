@@ -15,6 +15,8 @@ type User {
     webColor2: String
     id: String
     token: String
+    file: String
+    fileName: String
 }
 
 type AuthData {

@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    environment:
+      MONGO_LOGIN: "mongodb+srv://svendudink:knidudnevs@cluster0.f8z0uri.mongodb.net/?retryWrites=true&w=majority"
+      ORIGINS: "http://localhost:3000"
+      PORT: "8080"
+      HOST: "cvspace.de"
+
+    ports:
+      - "8080:8080"
+
+  client:
+    build:
+      context: .
+      dockerfile: client.Dockerfile
+    environment:
+      HOST: "cvspace.de"
+
+    ports:
+      - "3000:80"

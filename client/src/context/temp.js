@@ -46,14 +46,12 @@ export const UserContextProvider = (props) => {
   //
   //
   /////////////////////////////////////////gnidoC//s'nevS////////////////////////////////
-  console.log(activePage);
 
   useEffect(() => {
     setErrorMessages("");
   }, [activePage]);
 
   const UserGraphQLHandler = async (request, personalData) => {
-    console.log(personalData);
     const requestList = [
       `mutation {
   createUser(userInput: {emailAdress:"${personalData.emailAdress}", password:"${personalData.password}", aboutCompany: "${personalData.aboutCompany}", companyName: "${personalData.companyName}", phoneNumber: "${personalData.phoneNumber}", yourName: "${personalData.yourName}", logoLink: "${personalData.logoLink}", hashColor: "${personalData.hashColor}" })
@@ -80,7 +78,7 @@ export const UserContextProvider = (props) => {
       }
 `,
     ];
-    console.log("view", requestList[request]);
+
     const graphglQuery = {
       query: requestList[request],
     };
@@ -92,15 +90,12 @@ export const UserContextProvider = (props) => {
       .then((res) => res.json())
       .then((resData) => (userData.current = resData));
 
-    console.log("second");
-    console.log(userData.current);
     if (userData.current.data) {
       setErrorMessages("");
       setMessages(userData.current.data);
     }
 
     if (userData.current.errors) {
-      console.log("check", userData.current.errors[0].message);
       setMessages("");
       setErrorMessages(userData.current.errors[0].message);
       setText({
@@ -113,13 +108,11 @@ export const UserContextProvider = (props) => {
         loginEmailAdress: "",
         loginPassword: "",
       });
-
-      console.log(errorMessages);
     }
 
     if (request === 1 && userData.current.data.login.token) {
       localStorage.setItem("token", userData.current.data.login.token);
-      console.log("token");
+
       setLoggedIn(true);
       setErrorMessages("");
       setText({

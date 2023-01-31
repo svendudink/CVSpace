@@ -9,10 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const config_1 = require("../config/config");
 const fs = require("fs");
 const PDFDocument = require("pdfkit");
 const replaceColor = require("replace-color");
 const QRCode = require("qrcode");
+const blobStream = require("blob-stream");
+console.log(config_1.dev);
 const mmToPtX = (x) => {
     const xProcent = x / 2.1;
     return 5.9528 * xProcent;
@@ -21,11 +24,107 @@ const mmToPtY = (y) => {
     const yProcent = y / 2.97;
     return 8.4189 * yProcent;
 };
+if (fs.existsSync(`./logos/Archivo-Bold.ttf`)) {
+    console.log("nailed it1");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`./Archivo-Bold.ttf`)) {
+    console.log("nailed it2");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`/logos/Archivo-Bold.ttf`)) {
+    console.log("nailed it3");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`logos/Archivo-Bold.ttf`)) {
+    console.log("nailed it4");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`/Archivo-Bold.ttf`)) {
+    console.log("nailed it5");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`app/server/Archivo-Bold.ttf`)) {
+    console.log("nailed it6");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`/app/server/Archivo-Bold.ttf`)) {
+    console.log("nailed it7");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`./app/server/Archivo-Bold.ttf`)) {
+    console.log("nailed it8");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`app/server/Archivo-Bold.ttf`)) {
+    console.log("nailed it9");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`/server/Archivo-Bold.ttf`)) {
+    console.log("nailed it10");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`./server/Archivo-Bold.ttf`)) {
+    console.log("nailed it11");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`server/Archivo-Bold.ttf`)) {
+    console.log("nailed it12");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`build/Archivo-Bold.ttf`)) {
+    console.log("nailed it13");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`/build/Archivo-Bold.ttf`)) {
+    console.log("nailed it14");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`./build/Archivo-Bold.ttf`)) {
+    console.log("nailed it15");
+}
+else {
+    console.log("fail");
+}
+if (fs.existsSync(`../build/Archivo-Bold.ttf`)) {
+    console.log("nailed it16");
+}
+else {
+    console.log("fail");
+}
 const ImgColorConvert = (file, textHexColor) => __awaiter(void 0, void 0, void 0, function* () {
     return new Promise((resolve, reject) => {
         console.log(textHexColor, "valid");
         replaceColor({
-            image: `./logos/originals/${file}`,
+            image: fs.readFileSync(config_1.dev ? `./logos/originals/${file}` : `server/${file}`),
             colors: {
                 type: "hex",
                 targetColor: "#000000",
@@ -34,12 +133,14 @@ const ImgColorConvert = (file, textHexColor) => __awaiter(void 0, void 0, void 0
         }, (err, jimpObject) => {
             if (err)
                 return console.log(err);
-            jimpObject.write(`./logos/${textHexColor}${file}`, (err) => {
+            jimpObject.write(fs.createWriteStream(config_1.dev
+                ? `../logos/${textHexColor}${file}`
+                : `server/${textHexColor}${file}`), (err) => {
                 if (err) {
                     return console.log(err);
                 }
                 else
-                    resolve();
+                    resolve(err);
             });
         });
     });
@@ -47,7 +148,7 @@ const ImgColorConvert = (file, textHexColor) => __awaiter(void 0, void 0, void 0
 const QRCodeGenrator = (text) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(yield QRCode.toDataURL(text));
-        yield QRCode.toFile("pqr.png", text);
+        yield QRCode.toFile(config_1.dev ? "pqr.png" : "server/pqr.png", text);
     }
     catch (err) {
         console.error(err);
@@ -57,10 +158,10 @@ const docCreator = (name, companyName, hexColor, textColor, imageName, ID, token
     // const token =
     //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzkyMmZlYjBkNTQwYjJhNDU1MDhhYmIiLCJlbWFpbEFkcmVzcyI6ImFybmhlbXN0YWRAZ21haWwuY29tIiwiaWF0IjoxNjcwNTI0OTA3LCJleHAiOjE3MDIwNjA5MDd9.md07OVPVj0tqDYr5bkvdWG8jYhYPWmmsueFQqvy_9aI";
     // const ID = "63922feb0d540b2a45508abb";
-    const linkAdress = `http://localhost:3000/recruiter/${token}`;
+    const linkAdress = `http://206.189.52.145:3000/recruiter/${token}`;
     // const textColor = "#0c1e4d";
     yield QRCodeGenrator(linkAdress);
-    if (!fs.existsSync(`./logos/${textColor}JS.png`)) {
+    if (!fs.existsSync(`server/${textColor}JS.png`)) {
         yield ImgColorConvert("HTMLCSS.png", textColor);
         yield ImgColorConvert("JS.png", textColor);
         yield ImgColorConvert("ts.png", textColor);
@@ -83,6 +184,7 @@ const docCreator = (name, companyName, hexColor, textColor, imageName, ID, token
     const sFont = 11;
     const mFont = 17;
     const lFont = 50;
+    console.log(config_1.dev);
     console.log(name, companyName, hexColor, imageName);
     try {
         console.log("test");
@@ -110,12 +212,14 @@ const docCreator = (name, companyName, hexColor, textColor, imageName, ID, token
             .fill(hexColor);
         // draw some text
         //595.28 x 841.89
-        doc.font("Archivo-Bold.ttf");
+        doc.font(config_1.dev ? "Archivo-Bold.ttf" : "server/Archivo-Bold.ttf");
         doc.fillColor(textColor);
         doc.fontSize(mFont);
         // doc.image("CVnoBackground.png", 0, 0, { width: 595.28 });
         doc.text(`Generated for ${name}`, 270, 17);
-        doc.image(imageName, 225, 5, { fit: [40, 40] });
+        doc.image(fs.readFileSync(config_1.dev ? `${imageName}` : `server/${imageName}`), 225, 5, {
+            fit: [40, 40],
+        });
         //CV Name
         doc.fontSize(lFont).text(`Sven Dudink`, mmToPtX(85), mmToPtY(27));
         //CV Job-title
@@ -131,8 +235,9 @@ const docCreator = (name, companyName, hexColor, textColor, imageName, ID, token
         });
         //Short description
         doc.fontSize(mFont).text(`TECH-STACK`, mmToPtX(5), mmToPtY(105));
+        console.log("init");
         // QR Code and directLink
-        doc.image("pqr.png", mmToPtX(8), mmToPtY(10), {
+        doc.image(fs.readFileSync(config_1.dev ? "pqr.png" : "server/pqr.png"), mmToPtX(8), mmToPtY(10), {
             fit: [mmToPtX(60), mmToPtY(60)],
         });
         doc.link(mmToPtX(8), mmToPtY(0), mmToPtX(60), mmToPtY(68), linkAdress);
@@ -176,76 +281,77 @@ const docCreator = (name, companyName, hexColor, textColor, imageName, ID, token
                 skillScore(startX + 120, startY + 8 + ind * 15, el.skillScore);
             });
         };
+        console.log("errormeasure1");
         const skillArray = [
             {
-                imgLink: `./logos/${textColor}JS.png`,
+                imgLink: `server/${textColor}JS.png`,
                 name: "JavaScript",
                 skillScore: 4,
             },
             {
-                imgLink: `./logos/${textColor}ts.png`,
+                imgLink: `server/${textColor}ts.png`,
                 name: "Typescript",
                 skillScore: 2,
             },
             {
-                imgLink: `./logos/${textColor}HTMLCSS.png`,
+                imgLink: `server/${textColor}HTMLCSS.png`,
                 name: "HTML5/CSS3",
                 skillScore: 3,
             },
             {
-                imgLink: `./logos/${textColor}mongo.png`,
+                imgLink: `server/${textColor}mongo.png`,
                 name: "MongoDB",
                 skillScore: 2,
             },
             {
-                imgLink: `./logos/${textColor}Sqlite.png`,
+                imgLink: `server/${textColor}Sqlite.png`,
                 name: "SQLite3",
                 skillScore: 2,
             },
             {
-                imgLink: `./logos/${textColor}graphql.png`,
+                imgLink: `server/${textColor}graphql.png`,
                 name: "GraphQL",
                 skillScore: 3,
             },
             {
-                imgLink: `./logos/${textColor}github.png`,
+                imgLink: `server/${textColor}github.png`,
                 name: "Git/Github",
                 skillScore: 2,
             },
             {
-                imgLink: `./logos/${textColor}bootstrap.png`,
+                imgLink: `server/${textColor}bootstrap.png`,
                 name: "Bootstrap",
                 skillScore: 2,
             },
             {
-                imgLink: `./logos/${textColor}nodejs.png`,
+                imgLink: `server/${textColor}nodejs.png`,
                 name: "NodeJS",
                 skillScore: 3,
             },
             {
-                imgLink: `./logos/${textColor}express.png`,
+                imgLink: `server/${textColor}express.png`,
                 name: "Express",
                 skillScore: 3,
             },
             {
-                imgLink: `./logos/${textColor}wordpress.png`,
+                imgLink: `server/${textColor}wordpress.png`,
                 name: "Wordpress",
                 skillScore: 3,
             },
             {
-                imgLink: `./logos/${textColor}mui.png`,
+                imgLink: `server/${textColor}mui.png`,
                 name: "MaterialUI",
                 skillScore: 2,
             },
             {
-                imgLink: `./logos/${textColor}react.png`,
+                imgLink: `server/${textColor}react.png`,
                 name: "ReactJS",
                 skillScore: 3,
             },
-            { imgLink: `./logos/${textColor}aws.png`, name: "AWS", skillScore: 2 },
-            { imgLink: `./logos/${textColor}groq.png`, name: "GROQ", skillScore: 2 },
+            { imgLink: `server/${textColor}aws.png`, name: "AWS", skillScore: 2 },
+            { imgLink: `server/${textColor}groq.png`, name: "GROQ", skillScore: 2 },
             {
-                imgLink: `./logos/${textColor}cplusplus.png`,
+                imgLink: `server/${textColor}cplusplus.png`,
                 name: "C++",
                 skillScore: 1,
             },
@@ -255,6 +361,7 @@ const docCreator = (name, companyName, hexColor, textColor, imageName, ID, token
             //   skillScore: 1,
             // },
         ];
+        console.log("errormeasure2");
         skillNames(skillArray);
         // end of Tech stack
         //lAnguage Skills
@@ -282,24 +389,28 @@ const docCreator = (name, companyName, hexColor, textColor, imageName, ID, token
         doc
             .fontSize(sFont)
             .text(`mail: sven@dudink.net`, mmToPtX(5), mmToPtY(270 + 10));
+        doc
+            .fontSize(sFont)
+            .text(`Github: https://github.com/svendudink`, mmToPtX(5), mmToPtY(275 + 10));
         //Working experience
         const jobCreation = (jobDate, jobRole, company, taskArray, positionYmm) => {
             const positionXmm = 85;
             doc
                 .fontSize(sFont)
-                .font("Archivo-Bold.ttf")
+                .font(config_1.dev ? "Archivo-Bold.ttf" : "server/Archivo-Bold.ttf")
                 .text(jobDate, mmToPtX(positionXmm), mmToPtY(positionYmm), {
                 align: "left",
                 continued: true,
             })
-                .font("Archivo-SuperBold.ttf")
+                .font(config_1.dev ? "Archivo-SuperBold.ttf" : "server/Archivo-SuperBold.ttf")
                 .text(` ${jobRole}`)
-                .font("Archivo-Bold.ttf")
+                .font(config_1.dev ? "Archivo-Bold.ttf" : "server/Archivo-Bold.ttf")
                 .text(company);
             taskArray.forEach((element) => {
                 doc.text(`• ${element}`, mmToPtX(positionXmm + 2));
             });
         };
+        console.log("errormeasure3");
         jobCreation("01/16-07/22", "Founder and Manager", "Yourgreenphone, Berlin", [
             "managing of 7 Employees",
             "Head of technical department",
@@ -321,15 +432,16 @@ const docCreator = (name, companyName, hexColor, textColor, imageName, ID, token
         jobCreation("01-06-03-09", "Teamlead Face to face Marketing", "Emolife Netherlands Nationwide", ["Selling Charity contracts Face to face", "Training new employees"], 195);
         let baseLineX = 85;
         let baseLineY = 75;
+        console.log("errormeasure4");
         doc
             .fontSize(mFont)
             .text(`WORKING EXPERIENCE`, mmToPtX(baseLineX), mmToPtY(baseLineY));
         baseLineY = baseLineY + 10;
         doc
             .fontSize(sFont)
-            .font("Archivo-SuperBold.ttf")
+            .font(config_1.dev ? "Archivo-SuperBold.ttf" : "server/Archivo-SuperBold.ttf")
             .text(`Projects:`, mmToPtX(baseLineX), mmToPtY(baseLineY + 130))
-            .font("Archivo-Bold.ttf")
+            .font(config_1.dev ? "Archivo-Bold.ttf" : "server/Archivo-Bold.ttf")
             .text(`Bottle Luminous`)
             .text(`Party Store records`)
             .text(`Berlin Bikeroutes`)
@@ -340,7 +452,7 @@ const docCreator = (name, companyName, hexColor, textColor, imageName, ID, token
             .text(`EDUCATION`, mmToPtX(baseLineX), mmToPtY(baseLineY + 150));
         doc
             .fontSize(sFont)
-            .text(`02/22-07/22 Code Academy Berlin`, mmToPtX(baseLineX), mmToPtY(baseLineY + 160));
+            .text(`02/22-07/22 Code Academy Berlin 840Hours JavaScript + Scrum`, mmToPtX(baseLineX), mmToPtY(baseLineY + 160));
         doc
             .fontSize(sFont)
             .text(`06-09 IT Rijn ijssel College level 4 Arnhem`, mmToPtX(baseLineX), mmToPtY(baseLineY + 165));
@@ -355,16 +467,22 @@ const docCreator = (name, companyName, hexColor, textColor, imageName, ID, token
         });
         doc
             .fontSize(sFont)
-            .text(`front end Development, Backend development, Android testing, Debugging, code maintenance,  automation Script writing, `, mmToPtX(baseLineX), mmToPtY(baseLineY + 187), {
+            .text(`Front-end development, Back-end development, Android testing, Debugging, Code maintenance,  Automation Script writing, `, mmToPtX(baseLineX), mmToPtY(baseLineY + 187), {
             width: mmToPtX(130),
             align: "left",
         });
+        console.log("errormeasure5");
         doc.end();
-        yield doc.pipe(fs.createWriteStream(`CVSvenDudink${companyName}.pdf`));
+        const stream = yield doc.pipe(blobStream());
+        console.log(stream);
+        yield doc.pipe(fs.createWriteStream(config_1.dev
+            ? `CVSvenDudink${companyName}.pdf`
+            : `server/CVSvenDudink${companyName}.pdf`));
+        console.log("finalized");
         return "finished";
     }
     catch (error) {
-        console.log(error);
+        console.log("error", error);
     }
 });
 exports.default = docCreator;

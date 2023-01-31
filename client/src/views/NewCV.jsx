@@ -9,7 +9,6 @@ function NewCV() {
 
   const textInputHandler = (e) => {
     setPersonalInfo({ ...personalInfo, [e.target.id]: e.target.value });
-    console.log(personalInfo);
   };
 
   const sendFormHandler = () => {

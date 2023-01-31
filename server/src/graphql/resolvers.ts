@@ -6,6 +6,15 @@ import docCreator from "../Helper/CvGenerator";
 import fs from "fs";
 import axios from "axios";
 import { decodeToken } from "../utils/jwt.js";
+import { betterSetTimeOut } from "../utils/betterSetTimout";
+import { dev } from "../config/config";
+
+const convertBase64 = (path) => {
+  // read binary data from file
+  const bitmap = fs.readFileSync(path);
+  // convert the binary data to base64 encoded string
+  return bitmap.toString("base64");
+};
 
 const createUser = async function ({ userInput }: any) {
   const errors = [];
@@ -46,7 +55,7 @@ const createUser = async function ({ userInput }: any) {
     );
     console.log("checkTooken", token);
 
-    sendEmail(
+    await sendEmail(
       userInput.emailAdress,
       userInput.recruiterName,
       userInput.companyName,
@@ -61,6 +70,12 @@ const createUser = async function ({ userInput }: any) {
 
   return {
     token: token.toString(),
+    fileName: `Resume Sven Dudink for ${userInput.companyName}`,
+    file: convertBase64(
+      dev
+        ? `CVSvenDudink${userInput.companyName}.pdf`
+        : `server/CVSvenDudink${userInput.companyName}.pdf`
+    ),
     ...createdUser._doc,
     _id: createdUser.id.toString(),
   };
@@ -123,7 +138,7 @@ const infoExtractor = async (
   ownHex
 ) => {
   if (companyLogo !== "undefined") {
-    async function download(url, filepath) {
+    async function download(url, fileName) {
       const response = await axios({
         url,
         method: "GET",
@@ -131,9 +146,11 @@ const infoExtractor = async (
       });
       return new Promise((resolve, reject) => {
         response.data
-          .pipe(fs.createWriteStream(filepath))
+          .pipe(
+            fs.createWriteStream(dev ? `${fileName}` : `server/${fileName}`)
+          )
           .on("error", reject)
-          .once("close", () => resolve(filepath));
+          .once("close", () => resolve(fileName));
       });
     }
 
@@ -143,6 +160,8 @@ const infoExtractor = async (
       .replace(".", "x")}`;
     console.log(companyLogo);
     download(companyLogo, fileName);
+
+    await betterSetTimeOut(3000);
 
     return { hex: ownHex, fileName: fileName };
   }
