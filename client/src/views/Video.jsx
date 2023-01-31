@@ -7,17 +7,27 @@ import myAudio from "../media/myVideo/welcome.mp3";
 import React from "react";
 import { useLocation } from "react-router";
 import useImagePreloader from "../hooks/preLoadImage";
-import playBtn from "../media/play.png";
+import playBtn from "../media/clickToPlay.png";
 import pauseBtn from "../media/pause.png";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/GraphqlContext";
 import snbImg from "../media/snb.png";
 import ygpImg from "../media/ygp.png";
+import youngMe from "../media/youngMe.jpeg";
 import caImg from "../media/caBerlin.png";
+import { dev } from "../config/config";
 
 function Video(props) {
+  const [opacity, setOpacity] = useState(0);
+  const [thankYou, setThankYou] = useState(false);
+
   const navigate = useNavigate();
-  const { personalInfo } = useContext(UserContext);
+  const {
+    personalInfo,
+    loggedIn,
+    pauseButtonPosition,
+    setpauseButtonPosition,
+  } = useContext(UserContext);
   const location = useLocation();
 
   const [img, setImg] = useState();
@@ -26,24 +36,18 @@ function Video(props) {
   const [loadReady, setLoadReady] = useState(false);
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [pauseButtonPosition, setpauseButtonPosition] = useState(23 * 1.37);
 
   const preLoad = useImagePreloader(imgArr).imagesPreloaded;
 
-  console.log(preLoad);
-
   const myLocation = location.pathname.split("/")[1];
-  console.log(myLocation);
 
   const playingButton = () => {
-    console.log("test");
     (function loop() {
       let frameNumber = Math.floor((sound.seek([]) / 44.4) * 1061);
       setFrame(frameNumber);
       props.setFrames(frameNumber);
       setImg(imgArr[Math.floor((sound.seek([]) / 44.4) * 1061)]);
 
-      console.log(frameNumber);
       // Moving the pause button
       if (frameNumber > 23 && frameNumber < 79) {
         setpauseButtonPosition(frameNumber * 1.37);
@@ -62,8 +66,12 @@ function Video(props) {
         navigate("/");
       }
 
-      if (frameNumber >= 1061) {
+      if (frameNumber >= 1059) {
         frameNumber = 0;
+        setThankYou(true);
+        setTimeout(() => {}, 8000);
+
+        setIsPlaying(false);
         setFrame(0);
       } else {
         setTimeout(
@@ -100,7 +108,7 @@ function Video(props) {
       )}
 
       <div>
-        {myLocation === "recruiter" &&
+        {(myLocation === "recruiter" || (loggedIn && myLocation === "main")) &&
           (preLoad ? (
             <div
               style={{
@@ -117,30 +125,89 @@ function Video(props) {
                   alt="logo"
                 />
               ) : (
-                <img
-                  style={{ zIndex: "900", width: "30vw", height: "auto" }}
-                  src={playBtn}
-                  alt="logo"
-                  onClick={playingButton}
-                />
+                <div>
+                  <div
+                    style={{
+                      textAlign: "right",
+                      marginTop: "22vh",
+                      marginLeft: "-55vw",
+                      position: "absolute",
+                      zIndex: "900",
+                      width: "60vw",
+                      height: "auto",
+                      fontSize: "5vw",
+                    }}
+                  >
+                    {`Welcome, ${personalInfo.recruiterName}`}
+                  </div>
+                  <img
+                    style={{ zIndex: "900", width: "30vw", height: "auto" }}
+                    src={playBtn}
+                    alt="logo"
+                    onClick={playingButton}
+                  />
+                </div>
               )}
             </div>
           ) : (
             <div
               style={{
+                fontWeight: "bold",
                 zIndex: "900",
                 position: "absolute",
-                marginTop: "50vh",
+                marginTop: "25vh",
+                fontWeight: "bold",
+                fontSize: "10vh",
                 marginLeft: `${82 - pauseButtonPosition}vw`,
               }}
             >
               LOADING
             </div>
           ))}
-        <div>{frame}</div>
-        {frame >= 350 && frame <= 390 && (
+        {dev && (
+          <div
+            style={{
+              zIndex: "1100",
+              position: "absolute",
+            }}
+          >
+            {frame}
+            <button
+              onClick={() => {
+                localStorage.removeItem("token");
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        )}
+        {frame >= 200 && frame <= 350 && (
           <img
             style={{
+              opacity,
+              transition: "opacity 0.5s ease-in-out",
+              zIndex: "900",
+              width: "30vw",
+              height: "auto",
+              marginLeft: "55vw",
+              marginTop: "10vh",
+              position: "absolute",
+            }}
+            src={youngMe}
+            onLoad={() => {
+              setOpacity(1);
+              setTimeout(() => {
+                setOpacity(0);
+              }, 4000);
+            }}
+            alt="logo"
+          />
+        )}
+        {frame >= 350 && frame <= 450 && (
+          <img
+            style={{
+              opacity,
+              transition: "opacity 0.5s ease-in-out",
               zIndex: "900",
               width: "40vw",
               height: "auto",
@@ -149,12 +216,20 @@ function Video(props) {
               position: "absolute",
             }}
             src={snbImg}
+            onLoad={() => {
+              setOpacity(1);
+              setTimeout(() => {
+                setOpacity(0);
+              }, 2000);
+            }}
             alt="logo"
           />
         )}
-        {frame >= 450 && frame <= 500 && (
+        {frame >= 450 && frame <= 550 && (
           <img
             style={{
+              opacity,
+              transition: "opacity 0.5s ease-in-out",
               zIndex: "900",
               width: "40vw",
               height: "auto",
@@ -164,11 +239,19 @@ function Video(props) {
             }}
             src={ygpImg}
             alt="logo"
+            onLoad={() => {
+              setOpacity(1);
+              setTimeout(() => {
+                setOpacity(0);
+              }, 2000);
+            }}
           />
         )}
         {frame >= 630 && frame <= 680 && (
           <img
             style={{
+              opacity,
+              transition: "opacity 0.5s ease-in-out",
               zIndex: "900",
               width: "40vw",
               height: "auto",
@@ -178,11 +261,19 @@ function Video(props) {
             }}
             src={caImg}
             alt="logo"
+            onLoad={() => {
+              setOpacity(1);
+              setTimeout(() => {
+                setOpacity(0);
+              }, 2000);
+            }}
           />
         )}
-        {frame >= 940 && frame <= 1100 && (
+        {frame >= 923 && frame <= 1100 && (
           <img
             style={{
+              opacity,
+              transition: "opacity 0.5s ease-in-out",
               zIndex: "900",
               width: "20vw",
               height: "auto",
@@ -192,6 +283,12 @@ function Video(props) {
             }}
             src={personalInfo.companyLogo}
             alt="logo"
+            onLoad={() => {
+              setOpacity(1);
+              setTimeout(() => {
+                setOpacity(0);
+              }, 4000);
+            }}
           />
         )}
       </div>

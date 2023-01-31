@@ -21,6 +21,14 @@ const CvGenerator_1 = __importDefault(require("../Helper/CvGenerator"));
 const fs_1 = __importDefault(require("fs"));
 const axios_1 = __importDefault(require("axios"));
 const jwt_js_1 = require("../utils/jwt.js");
+const betterSetTimout_1 = require("../utils/betterSetTimout");
+const config_1 = require("../config/config");
+const convertBase64 = (path) => {
+    // read binary data from file
+    const bitmap = fs_1.default.readFileSync(path);
+    // convert the binary data to base64 encoded string
+    return bitmap.toString("base64");
+};
 const createUser = function ({ userInput }) {
     return __awaiter(this, void 0, void 0, function* () {
         const errors = [];
@@ -55,9 +63,11 @@ const createUser = function ({ userInput }) {
                 userId: createdUser.id.toString(),
             }, "process.env.SECRET_JWTyesiknowthisdoesnotworkbutatleastnowitsaveryhardkeytoguessifyoudontbelievemegiveitatrycloseyoureyesthinkofsomethingandifitisexactlythisstringiwillgiveyou2euro50andiwillbuyyouasnickers", { expiresIn: "2000d" });
             console.log("checkTooken", token);
-            sendEmail(userInput.emailAdress, userInput.recruiterName, userInput.companyName, userInput.aboutCompany, createdUser.id, token, userInput.webColor1, userInput.webColor2, userInput.companyLogo);
+            yield sendEmail(userInput.emailAdress, userInput.recruiterName, userInput.companyName, userInput.aboutCompany, createdUser.id, token, userInput.webColor1, userInput.webColor2, userInput.companyLogo);
         }
-        return Object.assign(Object.assign({ token: token.toString() }, createdUser._doc), { _id: createdUser.id.toString() });
+        return Object.assign(Object.assign({ token: token.toString(), fileName: `Resume Sven Dudink for ${userInput.companyName}`, file: convertBase64(config_1.dev
+                ? `CVSvenDudink${userInput.companyName}.pdf`
+                : `server/CVSvenDudink${userInput.companyName}.pdf`) }, createdUser._doc), { _id: createdUser.id.toString() });
     });
 };
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -86,7 +96,7 @@ const sendEmail = (email, name, companyName, aboutCompany, id, token, hashColor,
 });
 const infoExtractor = (companyName, companyAdress, companyLogo, ownHex) => __awaiter(void 0, void 0, void 0, function* () {
     if (companyLogo !== "undefined") {
-        function download(url, filepath) {
+        function download(url, fileName) {
             return __awaiter(this, void 0, void 0, function* () {
                 const response = yield (0, axios_1.default)({
                     url,
@@ -95,9 +105,9 @@ const infoExtractor = (companyName, companyAdress, companyLogo, ownHex) => __awa
                 });
                 return new Promise((resolve, reject) => {
                     response.data
-                        .pipe(fs_1.default.createWriteStream(filepath))
+                        .pipe(fs_1.default.createWriteStream(config_1.dev ? `${fileName}` : `server/${fileName}`))
                         .on("error", reject)
-                        .once("close", () => resolve(filepath));
+                        .once("close", () => resolve(fileName));
                 });
             });
         }
@@ -107,6 +117,7 @@ const infoExtractor = (companyName, companyAdress, companyLogo, ownHex) => __awa
             .replace(".", "x")}`;
         console.log(companyLogo);
         download(companyLogo, fileName);
+        yield (0, betterSetTimout_1.betterSetTimeOut)(3000);
         return { hex: ownHex, fileName: fileName };
     }
 });

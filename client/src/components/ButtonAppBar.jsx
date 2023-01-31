@@ -10,18 +10,52 @@ import { MenuItem } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "../context/GraphqlContext";
+import { useState } from "react";
+
+const styles = {
+  customizeToolbar: {
+    minHeight: 36,
+  },
+};
 
 export default function ButtonAppBar() {
   const navigate = useNavigate();
   const { personalInfo } = useContext(UserContext);
 
+  const [incdec, setIncDec] = useState("");
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
-        style={{ backgroundColor: personalInfo.webColor1 }}
-        position="static"
+        position="fixed"
+        style={{
+          zIndex: 950,
+          justifyContent: "center",
+          height: "3vw",
+          backgroundColor: personalInfo.webColor1,
+        }}
       >
         <Toolbar>
+          <MenuItem
+            key="faq"
+            onClick={() => {
+              navigate("/faq");
+            }}
+          >
+            <Typography
+              style={{
+                marginLeft: "14vw",
+                position: "fixed",
+                lineHeight: "0.6",
+              }}
+              textAlign="center"
+              variant="h6"
+              component="div"
+              sx={{ fontSize: "1.5vw" }}
+            >
+              Faq
+            </Typography>
+          </MenuItem>
           <MenuItem
             key="Tech-Stack"
             onClick={() => {
@@ -29,11 +63,15 @@ export default function ButtonAppBar() {
             }}
           >
             <Typography
-              style={{ marginLeft: "32vw", position: "fixed" }}
+              style={{
+                marginLeft: "28vw",
+                position: "fixed",
+                lineHeight: "0.6",
+              }}
               textAlign="center"
               variant="h6"
               component="div"
-              sx={{ flexGrow: 1 }}
+              sx={{ fontSize: "1.5vw" }}
             >
               Tech-Stack
             </Typography>
@@ -46,31 +84,59 @@ export default function ButtonAppBar() {
             }}
           >
             <Typography
-              style={{ marginLeft: "50vw", position: "fixed" }}
+              style={{
+                marginLeft: "42vw",
+                position: "fixed",
+                lineHeight: "0.6",
+              }}
               textAlign="center"
               variant="h6"
               component="div"
-              sx={{ flexGrow: 1 }}
+              sx={{ fontSize: "1.5vw" }}
             >
               Projects
             </Typography>
           </MenuItem>
-          {/* <Typography
-            style={{ paddingLeft: "32vw", position: "fixed" }}
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
+          <MenuItem
+            key="contact"
+            onClick={() => {
+              navigate("/contact");
+            }}
           >
-            Tech-stack
-          </Typography>
-          <Typography
-            style={{ paddingLeft: "50vw", position: "fixed" }}
-            variant="h6"
-            component="div"
-            sx={{ flexGrow: 1 }}
+            <Typography
+              style={{
+                marginLeft: "56vw",
+                position: "fixed",
+                lineHeight: "0.6",
+              }}
+              textAlign="center"
+              variant="h6"
+              component="div"
+              sx={{ fontSize: "1.5vw" }}
+            >
+              Contact
+            </Typography>
+          </MenuItem>
+          <MenuItem
+            key="main"
+            onClick={() => {
+              navigate("/main");
+            }}
           >
-            Projects
-          </Typography> */}
+            <Typography
+              style={{
+                marginLeft: "70vw",
+                position: "fixed",
+                lineHeight: "0.6",
+              }}
+              textAlign="center"
+              variant="h6"
+              component="div"
+              sx={{ fontSize: "1.5vw" }}
+            >
+              Main
+            </Typography>
+          </MenuItem>
         </Toolbar>
       </AppBar>
     </Box>

@@ -1,7 +1,7 @@
 import ButtonAppBar from "./components/ButtonAppBar";
 import { UserContextProvider } from "./context/GraphqlContext.js";
 import Watermark from "@uiw/react-watermark";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 
 import React from "react";
 
@@ -14,15 +14,22 @@ import Main from "./views/Main";
 import NewCV from "./views/NewCV";
 import Recruiter from "./views/Recruiter";
 import Projects from "./views/Projects";
+import MyFaq from "./views/Faq";
+import Contact from "./views/Contact";
+import DeepL from "./views/DeepL";
 
-console.log("tswaste");
 function App() {
+  const token = localStorage.getItem("token") !== "undefined" ? true : false;
   const [frames, setFrames] = useState(0);
   const [companyName, setCompanyName] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
 
   return (
-    <UserContextProvider setCompanyName={setCompanyName}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <UserContextProvider
+        setLoggedIn={setLoggedIn}
+        setCompanyName={setCompanyName}
+      >
         <Video setFrames={setFrames} />
         <ButtonAppBar />
         <Watermark
@@ -31,17 +38,27 @@ function App() {
         >
           <Routes>
             <Route path={"/"} element={<Main />} />
-            <Route path="/skills" element={<Skills />} />
-            <Route path="/newcv" element={<NewCV />} />
-            <Route path="/projects" element={<Projects />} />
+            <Route path={"/main"} element={<Main />} />
+            <Route path="/skills" element={loggedIn ? <Skills /> : <Main />} />
+            <Route path="/faq" element={loggedIn ? <MyFaq /> : <Main />} />
+            <Route path="/DeepL" element={<DeepL />} />
             <Route
-              path="/recruiter/:token/"
+              path="/contact"
+              element={loggedIn ? <Contact /> : <Main />}
+            />
+            <Route path="/newcv" element={<NewCV />} />
+            <Route
+              path="/projects"
+              element={loggedIn ? <Projects /> : <Main />}
+            />
+            <Route
+              path="recruiter/:token/"
               element={<Recruiter frames={frames} />}
             />
           </Routes>
         </Watermark>
-      </BrowserRouter>
-    </UserContextProvider>
+      </UserContextProvider>
+    </BrowserRouter>
   );
 }
 
