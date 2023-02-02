@@ -1,14 +1,12 @@
 import { createContext, useEffect, useState, useRef, useContext } from "react";
 import { triggerBase64Download } from "common-base64-downloader-react";
+import { dev } from "../config/config";
 
 import { useLocation } from "react-router";
 
 export const UserContext = createContext();
 
 export const UserContextProvider = (props) => {
-  const dev = false
-  const location = useLocation();
-
   const [messages, setMessages] = useState("");
   const [pauseButtonPosition, setpauseButtonPosition] = useState(23 * 1.37);
   const [errorMessages, setErrorMessages] = useState("");

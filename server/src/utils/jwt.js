@@ -2,18 +2,28 @@
 import jsonwebtoken from "jsonwebtoken";
 
 const decodeToken = async (token) => {
-  let secret = "";
-  jsonwebtoken.verify(
-    token,
+  const secretKeys = [
     "process.env.SECRET_JWTyesiknowthisdoesnotworkbutatleastnowitsaveryhardkeytoguessifyoudontbelievemegiveitatrycloseyoureyesthinkofsomethingandifitisexactlythisstringiwillgiveyou2euro50andiwillbuyyouasnickers",
-    async function (err, decoded) {
-      if (err) {
-        return { error: "invalid signature" };
-      }
-      secret = decoded;
+    "TTS1T",
+  ];
+
+  let decoded = "";
+  for (const secretKey of secretKeys) {
+    try {
+      decoded = jsonwebtoken.verify(token, secretKey);
+      console.log(secretKey);
+      break;
+    } catch (error) {
+      continue;
     }
-  );
-  return secret;
+  }
+  console.log("jwtmechanism", decoded);
+  if (decoded.i) {
+    decoded = { userId: decoded.i };
+    console.log("works");
+  }
+
+  return decoded;
 };
 
 export { decodeToken };

@@ -1,3 +1,4 @@
+// Import
 import bcrypt from "bcrypt";
 import validator from "validator";
 import jwt from "jsonwebtoken";
@@ -48,13 +49,13 @@ const createUser = async function ({ userInput }: any) {
   if (userInput.companyName) {
     token = jwt.sign(
       {
-        userId: createdUser.id.toString(),
+        i: createdUser.id.toString(),
       },
-      "process.env.SECRET_JWTyesiknowthisdoesnotworkbutatleastnowitsaveryhardkeytoguessifyoudontbelievemegiveitatrycloseyoureyesthinkofsomethingandifitisexactlythisstringiwillgiveyou2euro50andiwillbuyyouasnickers",
-      { expiresIn: "2000d" }
+      "TTS1T",
+      { algorithm: "HS256", noTimestamp: true }
     );
     console.log("checkTooken", token);
-
+    // "process.env.SECRET_JWTyesiknowthisdoesnotworkbutatleastnowitsaveryhardkeytoguessifyoudontbelievemegiveitatrycloseyoureyesthinkofsomethingandifitisexactlythisstringiwillgiveyou2euro50andiwillbuyyouasnickers"
     await sendEmail(
       userInput.emailAdress,
       userInput.recruiterName,
@@ -85,9 +86,15 @@ const login = async (req, res) => {
   console.log(req.token);
   const message: any = await decodeToken(req.token);
   console.log("message", message.userId);
+  const nonsense = message.userId.slice(0, message.userId.length - 10);
+  console.log("tell me more nonsense", nonsense);
   const user = await User.findOne({
     _id: message.userId,
   });
+
+  // .findOne({
+  //   _id: { $regex: message.userId },
+  // });
   console.log(user);
   return {
     companyLogo: user.companyLogo,

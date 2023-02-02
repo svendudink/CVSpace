@@ -36,6 +36,17 @@ export default function ButtonAppBar() {
         }}
       >
         <Toolbar>
+          <img
+            style={{
+              position: "fixed",
+              marginLeft: "0vw",
+              marginTop: "0.1vw",
+
+              height: "2.8vw",
+            }}
+            src={personalInfo.companyLogo}
+            alt="logo"
+          />
           <MenuItem
             key="faq"
             onClick={() => {

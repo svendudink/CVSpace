@@ -1,12 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import imgArr from "../media/video";
-
 import useSound from "use-sound";
 import myAudio from "../media/myVideo/welcome.mp3";
-
 import React from "react";
 import { useLocation } from "react-router";
-import useImagePreloader from "../hooks/preLoadImage";
+import { useImagePreloader } from "../hooks/preLoadImage";
 import playBtn from "../media/clickToPlay.png";
 import pauseBtn from "../media/pause.png";
 import { useNavigate } from "react-router-dom";
@@ -18,28 +16,37 @@ import caImg from "../media/caBerlin.png";
 import { dev } from "../config/config";
 
 function Video(props) {
-  const [opacity, setOpacity] = useState(0);
-  const [thankYou, setThankYou] = useState(false);
-
-  const navigate = useNavigate();
   const {
     personalInfo,
     loggedIn,
     pauseButtonPosition,
     setpauseButtonPosition,
   } = useContext(UserContext);
-  const location = useLocation();
+  const [opacity, setOpacity] = useState(0);
+  const [percentage, setPercentage] = useState(0);
+  const [lengthOfInterval, setLengthOfInterval] = useState(12);
 
+  const navigate = useNavigate();
+  const location = useLocation();
   const [img, setImg] = useState();
   const [play, { pause, duration, sound }] = useSound(myAudio);
   const [frame, setFrame] = useState(0);
-  const [loadReady, setLoadReady] = useState(false);
-
   const [isPlaying, setIsPlaying] = useState(false);
-
-  const preLoad = useImagePreloader(imgArr).imagesPreloaded;
+  const preLoad = useImagePreloader(imgArr).percentage;
 
   const myLocation = location.pathname.split("/")[1];
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (percentage >= 99) {
+      } else {
+        setPercentage(percentage + 1);
+        setLengthOfInterval(lengthOfInterval + percentage);
+      }
+    }, lengthOfInterval);
+
+    return () => clearInterval(intervalId);
+  }, [percentage]);
 
   const playingButton = () => {
     (function loop() {
@@ -66,10 +73,12 @@ function Video(props) {
         navigate("/");
       }
 
-      if (frameNumber >= 1059) {
+      if (frameNumber >= 1054 && frameNumber <= 1056) {
+        navigate("/thanks");
+      }
+
+      if (frameNumber >= 1057 && frameNumber <= 1062) {
         frameNumber = 0;
-        setThankYou(true);
-        setTimeout(() => {}, 8000);
 
         setIsPlaying(false);
         setFrame(0);
@@ -109,12 +118,12 @@ function Video(props) {
 
       <div>
         {(myLocation === "recruiter" || (loggedIn && myLocation === "main")) &&
-          (preLoad ? (
+          (preLoad === "100.00" ? (
             <div
               style={{
                 zIndex: "900",
                 position: "absolute",
-                marginTop: "5vh",
+                marginTop: "5vw",
                 marginLeft: `${82 - pauseButtonPosition}vw`,
               }}
             >
@@ -129,19 +138,27 @@ function Video(props) {
                   <div
                     style={{
                       textAlign: "right",
-                      marginTop: "22vh",
+                      marginTop: "10vw",
                       marginLeft: "-55vw",
                       position: "absolute",
                       zIndex: "900",
                       width: "60vw",
-                      height: "auto",
+                      height: "auto - 30",
                       fontSize: "5vw",
                     }}
                   >
-                    {`Welcome, ${personalInfo.recruiterName}`}
+                    {personalInfo.recruiterName === personalInfo.companyName ||
+                    personalInfo.recruiterName === ""
+                      ? `Made for ${personalInfo.companyName}`
+                      : `Welcome, ${personalInfo.recruiterName}`}
                   </div>
                   <img
-                    style={{ zIndex: "900", width: "30vw", height: "auto" }}
+                    style={{
+                      cursor: "pointer",
+                      zIndex: "900",
+                      width: "30vw",
+                      height: "auto",
+                    }}
                     src={playBtn}
                     alt="logo"
                     onClick={playingButton}
@@ -155,13 +172,15 @@ function Video(props) {
                 fontWeight: "bold",
                 zIndex: "900",
                 position: "absolute",
-                marginTop: "25vh",
-                fontWeight: "bold",
-                fontSize: "10vh",
-                marginLeft: `${82 - pauseButtonPosition}vw`,
+                marginTop: "7vw",
+                fontSize: "3vw",
+                marginLeft: `35vw`,
               }}
             >
-              LOADING
+              <div>
+                <p>{`${preLoad}% Loaded`}</p>
+                <progress value={preLoad} max="100" />
+              </div>
             </div>
           ))}
         {dev && (
@@ -270,6 +289,28 @@ function Video(props) {
           />
         )}
         {frame >= 923 && frame <= 1100 && (
+          <img
+            style={{
+              opacity,
+              transition: "opacity 0.5s ease-in-out",
+              zIndex: "900",
+              width: "20vw",
+              height: "auto",
+              marginLeft: "15vw",
+              marginTop: "20vh",
+              position: "absolute",
+            }}
+            src={personalInfo.companyLogo}
+            alt="logo"
+            onLoad={() => {
+              setOpacity(1);
+              setTimeout(() => {
+                setOpacity(0);
+              }, 4000);
+            }}
+          />
+        )}
+        {frame >= 1057 && frame <= 1062 && (
           <img
             style={{
               opacity,

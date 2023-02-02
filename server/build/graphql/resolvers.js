@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.graphqlResolver = void 0;
+// Import
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const validator_1 = __importDefault(require("validator"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -60,9 +61,10 @@ const createUser = function ({ userInput }) {
         let token = "";
         if (userInput.companyName) {
             token = jsonwebtoken_1.default.sign({
-                userId: createdUser.id.toString(),
-            }, "process.env.SECRET_JWTyesiknowthisdoesnotworkbutatleastnowitsaveryhardkeytoguessifyoudontbelievemegiveitatrycloseyoureyesthinkofsomethingandifitisexactlythisstringiwillgiveyou2euro50andiwillbuyyouasnickers", { expiresIn: "2000d" });
+                i: createdUser.id.toString(),
+            }, "TTS1T", { algorithm: "HS256", noTimestamp: true });
             console.log("checkTooken", token);
+            // "process.env.SECRET_JWTyesiknowthisdoesnotworkbutatleastnowitsaveryhardkeytoguessifyoudontbelievemegiveitatrycloseyoureyesthinkofsomethingandifitisexactlythisstringiwillgiveyou2euro50andiwillbuyyouasnickers"
             yield sendEmail(userInput.emailAdress, userInput.recruiterName, userInput.companyName, userInput.aboutCompany, createdUser.id, token, userInput.webColor1, userInput.webColor2, userInput.companyLogo);
         }
         return Object.assign(Object.assign({ token: token.toString(), fileName: `Resume Sven Dudink for ${userInput.companyName}`, file: convertBase64(config_1.dev
@@ -74,9 +76,14 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.token);
     const message = yield (0, jwt_js_1.decodeToken)(req.token);
     console.log("message", message.userId);
+    const nonsense = message.userId.slice(0, message.userId.length - 10);
+    console.log("tell me more nonsense", nonsense);
     const user = yield User_1.default.findOne({
         _id: message.userId,
     });
+    // .findOne({
+    //   _id: { $regex: message.userId },
+    // });
     console.log(user);
     return {
         companyLogo: user.companyLogo,

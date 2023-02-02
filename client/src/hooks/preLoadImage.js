@@ -10,6 +10,7 @@ const preloadImage = (src) =>
   });
 
 const useImagePreloader = (imageList) => {
+  const [percentage, setPercentage] = useState(0);
   const [imagesPreloaded, setImagesPreloaded] = useState(false);
 
   useEffect(() => {
@@ -17,6 +18,20 @@ const useImagePreloader = (imageList) => {
 
     const preloadImages = async () => {
       const imagesPromiseList = imageList.map((img) => preloadImage(img));
+      let count = 0;
+
+      imagesPromiseList.forEach((promise) => {
+        promise
+          .then(() => {
+            count++;
+            setPercentage(
+              ((count / imagesPromiseList.length) * 100).toFixed(2)
+            );
+          })
+          .catch(() => {
+            // handle the error
+          });
+      });
 
       try {
         await Promise.all(imagesPromiseList);
@@ -38,7 +53,7 @@ const useImagePreloader = (imageList) => {
     };
   }, [imageList]);
 
-  return { imagesPreloaded };
+  return { imagesPreloaded, percentage };
 };
 
-export default useImagePreloader;
+export { useImagePreloader };

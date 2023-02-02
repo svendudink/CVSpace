@@ -20,87 +20,6 @@ const mmToPtY = (y) => {
   return 8.4189 * yProcent;
 };
 
-if (fs.existsSync(`./logos/Archivo-Bold.ttf`)) {
-  console.log("nailed it1");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`./Archivo-Bold.ttf`)) {
-  console.log("nailed it2");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`/logos/Archivo-Bold.ttf`)) {
-  console.log("nailed it3");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`logos/Archivo-Bold.ttf`)) {
-  console.log("nailed it4");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`/Archivo-Bold.ttf`)) {
-  console.log("nailed it5");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`app/server/Archivo-Bold.ttf`)) {
-  console.log("nailed it6");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`/app/server/Archivo-Bold.ttf`)) {
-  console.log("nailed it7");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`./app/server/Archivo-Bold.ttf`)) {
-  console.log("nailed it8");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`app/server/Archivo-Bold.ttf`)) {
-  console.log("nailed it9");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`/server/Archivo-Bold.ttf`)) {
-  console.log("nailed it10");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`./server/Archivo-Bold.ttf`)) {
-  console.log("nailed it11");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`server/Archivo-Bold.ttf`)) {
-  console.log("nailed it12");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`build/Archivo-Bold.ttf`)) {
-  console.log("nailed it13");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`/build/Archivo-Bold.ttf`)) {
-  console.log("nailed it14");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`./build/Archivo-Bold.ttf`)) {
-  console.log("nailed it15");
-} else {
-  console.log("fail");
-}
-if (fs.existsSync(`../build/Archivo-Bold.ttf`)) {
-  console.log("nailed it16");
-} else {
-  console.log("fail");
-}
-
 const ImgColorConvert = async (file, textHexColor) => {
   return new Promise((resolve, reject) => {
     console.log(textHexColor, "valid");
@@ -136,7 +55,9 @@ const ImgColorConvert = async (file, textHexColor) => {
 const QRCodeGenrator = async (text) => {
   try {
     console.log(await QRCode.toDataURL(text));
-    await QRCode.toFile(dev ? "pqr.png" : "server/pqr.png", text);
+    await QRCode.toFile(dev ? "pqr.png" : "server/pqr.png", text, {
+      errorCorrectionLevel: "M",
+    });
   } catch (err) {
     console.error(err);
   }
@@ -181,9 +102,6 @@ const docCreator = async (
   const mFont = 17;
   const lFont = 50;
 
-  console.log(dev);
-
-  console.log(name, companyName, hexColor, imageName);
   try {
     console.log("test");
     // Create a document
@@ -257,18 +175,56 @@ const docCreator = async (
         fit: [mmToPtX(60), mmToPtY(60)],
       }
     );
-    doc.link(mmToPtX(8), mmToPtY(0), mmToPtX(60), mmToPtY(68), linkAdress);
+
     doc
-      .fontSize(sFont)
-      .text(
-        `Scan or Click on QR Code for video resume`,
-        mmToPtX(1),
-        mmToPtY(1),
-        {
-          width: mmToPtX(75),
-          align: "center",
-        }
-      );
+      .save()
+      .moveTo(mmToPtX(22), mmToPtX(30))
+      .lineTo(mmToPtX(22), mmToPtX(36))
+      .lineTo(mmToPtX(58), mmToPtX(36))
+      .lineTo(mmToPtX(58), mmToPtX(30))
+      .lineTo(mmToPtX(22), mmToPtX(30))
+      .fill("white");
+
+    doc
+      .save()
+      .moveTo(mmToPtX(22), mmToPtX(30))
+      .lineTo(mmToPtX(22), mmToPtX(36))
+      .lineTo(mmToPtX(58), mmToPtX(36))
+      .lineTo(mmToPtX(58), mmToPtX(30))
+      .lineTo(mmToPtX(22), mmToPtX(30))
+      .stroke();
+
+    doc.link(mmToPtX(8), mmToPtY(0), mmToPtX(60), mmToPtY(68), linkAdress);
+
+    doc
+      .fontSize(mFont)
+      .fill("black")
+      .text(`Video resume`, mmToPtX(1), mmToPtY(1), {
+        width: mmToPtX(75),
+        align: "center",
+      });
+
+    // doc
+    //   .fontSize(lFont)
+    //   .fillColor(hexColor)
+    //   .text(`Scan`, mmToPtX(1), mmToPtY(20), {
+    //     width: mmToPtX(75),
+    //     align: "center",
+    //   });
+    // doc
+    //   .fontSize(lFont)
+    //   .fillColor(hexColor)
+    //   .text(`or`, mmToPtX(1), mmToPtY(30), {
+    //     width: mmToPtX(75),
+    //     align: "center",
+    //   });
+    doc
+      .fontSize(15)
+      .fillColor("black")
+      .text(`Scan or Click`, mmToPtX(3), mmToPtY(30), {
+        width: mmToPtX(75),
+        align: "center",
+      });
 
     //Fill dots
     let x = 200;
@@ -280,6 +236,7 @@ const docCreator = async (
         doc
           .circle(x + i * 10, y, 5)
           .lineWidth(2)
+          .fillColor("black")
           .fillAndStroke(textColor, textColor);
       }
       for (let i = 0; i < 5; i++) {
