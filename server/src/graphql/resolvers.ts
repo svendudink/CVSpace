@@ -9,6 +9,12 @@ import axios from "axios";
 import { decodeToken } from "../utils/jwt.js";
 import { betterSetTimeOut } from "../utils/betterSetTimout";
 import { dev } from "../config/config";
+import { logoColorUpload } from "../controller/coloredFileUpload";
+
+let preFix = "server/";
+if (dev) {
+  preFix = "";
+}
 
 const convertBase64 = (path) => {
   // read binary data from file
@@ -19,14 +25,8 @@ const convertBase64 = (path) => {
 
 const createUser = async function ({ userInput }: any) {
   const errors = [];
-  if (!validator.isEmail(userInput.emailAdress)) {
-    errors.push({
-      message: "email Adress is invalid",
-    });
-  }
+  console.log("checkfistentry", userInput);
 
-  console.log("test");
-  const hashedPw = await bcrypt.hash("0000", 12);
   const user = new User({
     emailAdress: userInput.emailAdress,
     companyLogo: userInput.companyLogo,
@@ -36,8 +36,9 @@ const createUser = async function ({ userInput }: any) {
     recruiterName: userInput.recruiterName,
     webColor1: userInput.webColor1,
     webColor2: userInput.webColor2,
+    webColor3: userInput.webColor3,
   });
-  console.log("viewinput", userInput.hashColor, userInput.companyLogo);
+
   if (errors.length > 0) {
     const error = new Error("invalid input");
     error.data = errors;
@@ -65,17 +66,18 @@ const createUser = async function ({ userInput }: any) {
       token,
       userInput.webColor1,
       userInput.webColor2,
+      userInput.webColor3,
       userInput.companyLogo
     );
   }
-
+  logoColorUpload(userInput.webColor3);
+  await betterSetTimeOut(1500);
+  console.log("checkifwaited");
   return {
     token: token.toString(),
     fileName: `Resume Sven Dudink for ${userInput.companyName}`,
     file: convertBase64(
-      dev
-        ? `CVSvenDudink${userInput.companyName}.pdf`
-        : `server/CVSvenDudink${userInput.companyName}.pdf`
+      `${preFix}src/createdcvs/CVSvenDudink${userInput.companyName}.pdf`
     ),
     ...createdUser._doc,
     _id: createdUser.id.toString(),
@@ -104,6 +106,7 @@ const login = async (req, res) => {
     recruiterName: user.recruiterName,
     webColor1: user.webColor1,
     webColor2: user.webColor2,
+    webColor3: user.webColor3,
   };
 };
 
@@ -116,6 +119,7 @@ const sendEmail = async (
   token,
   hashColor,
   hashColor2,
+  webColor3,
   companyLogo
 ) => {
   console.log("vlad", companyLogo);
@@ -136,6 +140,7 @@ const sendEmail = async (
     token
   );
   console.log(email, name, companyName, aboutCompany, id, token);
+  return;
 };
 
 const infoExtractor = async (
@@ -153,9 +158,7 @@ const infoExtractor = async (
       });
       return new Promise((resolve, reject) => {
         response.data
-          .pipe(
-            fs.createWriteStream(dev ? `${fileName}` : `server/${fileName}`)
-          )
+          .pipe(fs.createWriteStream(`${preFix}src/companylogos/${fileName}`))
           .on("error", reject)
           .once("close", () => resolve(fileName));
       });
@@ -166,9 +169,7 @@ const infoExtractor = async (
       .replace("/", "x")
       .replace(".", "x")}`;
     console.log(companyLogo);
-    download(companyLogo, fileName);
-
-    await betterSetTimeOut(3000);
+    await download(companyLogo, fileName);
 
     return { hex: ownHex, fileName: fileName };
   }

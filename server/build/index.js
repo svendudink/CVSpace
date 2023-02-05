@@ -47,12 +47,16 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const resolvers_1 = require("./graphql/resolvers");
 const schemas_1 = __importDefault(require("./graphql/schemas"));
 const express_graphql_1 = require("express-graphql");
+const config_1 = require("./config/config");
+const fs_1 = __importDefault(require("fs"));
+const config_2 = require("./config/config");
 let corsOptions = {
     origin: "*",
     credentials: true,
 };
 const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
+console.log("loaded envirnoment:", config_1.fileLoaded);
 // Initial values
 dotenv.config();
 app.use((0, cors_1.default)(corsOptions));
@@ -72,6 +76,169 @@ app.use((0, cors_1.default)(corsOptions));
 app.listen(8080, () => {
     console.log(`server running on  xxx port: ${8080}`);
 });
+console.log(config_2.preFix);
+if (fs_1.default.existsSync(`${config_2.preFix}src/logos/`)) {
+    console.log("true about source");
+}
+else {
+    console.log("false about source");
+}
+if (fs_1.default.existsSync(`${config_2.preFix}logos/`)) {
+    console.log("true about source");
+    console.log("prefix:", config_2.preFix);
+}
+else {
+    console.log("false about source");
+}
+if (fs_1.default.existsSync(`${config_2.preFix}src/logos/`)) {
+    console.log("true about source");
+}
+else {
+    console.log("false about source");
+}
+if (fs_1.default.existsSync(`src/logos/`)) {
+    console.log("true about source");
+}
+else {
+    console.log("false about source");
+}
+if (fs_1.default.existsSync(`src/logos/`)) {
+    console.log("true about source");
+}
+else {
+    console.log("false about source");
+}
+if (fs_1.default.existsSync(`src/logos/`)) {
+    console.log("true about source");
+}
+else {
+    console.log("false about source");
+}
+if (fs_1.default.existsSync(`logos/`)) {
+    console.log("true about source");
+    console.log("prefix:", config_2.preFix);
+}
+else {
+    console.log("false about source");
+}
+if (fs_1.default.existsSync(`/src/logos/`)) {
+    console.log("true about source");
+}
+else {
+    console.log("false about source");
+}
+if (fs_1.default.existsSync(`src/logos/`)) {
+    console.log("true about source");
+}
+else {
+    console.log("false about source");
+}
+if (fs_1.default.existsSync(`server/src/logos/`)) {
+    console.log("true about source");
+}
+else {
+    console.log("false about source");
+}
+if (fs_1.default.existsSync(`./logos/Archivo-Bold.ttf`)) {
+    console.log("nailed it1");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`./Archivo-Bold.ttf`)) {
+    console.log("nailed it2");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`/logos/Archivo-Bold.ttf`)) {
+    console.log("nailed it3");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`logos/Archivo-Bold.ttf`)) {
+    console.log("nailed it4");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`/Archivo-Bold.ttf`)) {
+    console.log("nailed it5");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`app/server/Archivo-Bold.ttf`)) {
+    console.log("nailed it6");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`/app/server/Archivo-Bold.ttf`)) {
+    console.log("nailed it7");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`./app/server/Archivo-Bold.ttf`)) {
+    console.log("nailed it8");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`app/server/Archivo-Bold.ttf`)) {
+    console.log("nailed it9");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`/server/Archivo-Bold.ttf`)) {
+    console.log("nailed it10");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`./server/Archivo-Bold.ttf`)) {
+    console.log("nailed it11");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`server/Archivo-Bold.ttf`)) {
+    console.log("nailed it12");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`build/Archivo-Bold.ttf`)) {
+    console.log("nailed it13");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`/build/Archivo-Bold.ttf`)) {
+    console.log("nailed it14");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`./build/Archivo-Bold.ttf`)) {
+    console.log("nailed it15");
+}
+else {
+    console.log("fail");
+}
+if (fs_1.default.existsSync(`../build/Archivo-Bold.ttf`)) {
+    console.log("nailed it16");
+}
+else {
+    console.log("fail");
+}
+console.log("preFix", config_2.preFix);
+// image server
+app.use(express_1.default.static("public"));
+app.use("/images", express_1.default.static(`${config_2.preFix}src/logos/`));
 // GraphQL Route
 app.use("/graphql", (0, express_graphql_1.graphqlHTTP)({
     schema: schemas_1.default,

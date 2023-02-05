@@ -1,7 +1,6 @@
-import { useState, useEffect, useContext } from "react";
-import imgArr from "../media/video";
-import useSound from "use-sound";
 import myAudio from "../media/myVideo/welcome.mp3";
+import { useState, useEffect, useContext } from "react";
+import useSound from "use-sound";
 import React from "react";
 import { useLocation } from "react-router";
 import { useImagePreloader } from "../hooks/preLoadImage";
@@ -14,6 +13,7 @@ import ygpImg from "../media/ygp.png";
 import youngMe from "../media/youngMe.jpeg";
 import caImg from "../media/caBerlin.png";
 import { dev } from "../config/config";
+import imgArr from "../media/video";
 
 function Video(props) {
   const {
@@ -25,6 +25,7 @@ function Video(props) {
   const [opacity, setOpacity] = useState(0);
   const [percentage, setPercentage] = useState(0);
   const [lengthOfInterval, setLengthOfInterval] = useState(12);
+  const [initialisationTime, setInitialisationTime] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -35,6 +36,24 @@ function Video(props) {
   const preLoad = useImagePreloader(imgArr).percentage;
 
   const myLocation = location.pathname.split("/")[1];
+
+  //give green light when enough data is loaded
+  const checkPreLoad = (percentage) => {
+    if (percentage === "100.00" || isPlaying) {
+      return true;
+    }
+    if (!initialisationTime) {
+      setInitialisationTime(Date.now());
+    }
+    const runTime = (Date.now() - initialisationTime) / 1000;
+    const runPercentage = (runTime / 44) * 100;
+
+    if (Number(percentage) - 10 >= runPercentage) {
+      return true;
+    }
+
+    return false;
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -118,7 +137,7 @@ function Video(props) {
 
       <div>
         {(myLocation === "recruiter" || (loggedIn && myLocation === "main")) &&
-          (preLoad === "100.00" ? (
+          (checkPreLoad(preLoad) ? (
             <div
               style={{
                 zIndex: "900",

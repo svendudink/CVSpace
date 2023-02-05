@@ -13,6 +13,7 @@ function NewCV() {
 
   const sendFormHandler = () => {
     UserGraphQLHandler(0, personalInfo);
+    console.log(personalInfo);
   };
 
   return (
@@ -73,8 +74,16 @@ function NewCV() {
         <TextField
           disabled={false}
           id="webColor2"
-          label="webpage color 2 (not in use untill afte MVP)"
+          label="webpage color 2 used for CV text"
           value={personalInfo.webColor2 ? personalInfo.webColor2 : ""}
+          onChange={textInputHandler}
+        />{" "}
+        <br /> <br />
+        <TextField
+          disabled={false}
+          id="webColor3"
+          label="webpage color 3 used for secondairy styling"
+          value={personalInfo.webColor3 ? personalInfo.webColor3 : ""}
           onChange={textInputHandler}
         />{" "}
         <br /> <br />
@@ -82,7 +91,11 @@ function NewCV() {
           disabled={false}
           id="recruiterName"
           label="name of recruiter"
-          value={personalInfo.recruiterName ? personalInfo.recruiterName : ""}
+          value={
+            personalInfo.recruiterName === personalInfo.companyName
+              ? personalInfo.companyName
+              : personalInfo.recruiterName
+          }
           onChange={textInputHandler}
         />
         <Button onClick={sendFormHandler}>Send</Button>
