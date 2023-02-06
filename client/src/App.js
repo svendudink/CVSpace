@@ -17,6 +17,7 @@ import Projects from "./views/Projects";
 import MyFaq from "./views/Faq";
 import Contact from "./views/Contact";
 import DeepL from "./views/DeepL";
+import Thanks from "./views/Thanks";
 
 function App() {
   const token = localStorage.getItem("token") !== "undefined" ? true : false;
@@ -39,6 +40,7 @@ function App() {
           <Routes>
             <Route path={"/"} element={<Main />} />
             <Route path={"/main"} element={<Main />} />
+            <Route path={"/thanks"} element={<Thanks />} />
             <Route path="/skills" element={loggedIn ? <Skills /> : <Main />} />
             <Route path="/faq" element={loggedIn ? <MyFaq /> : <Main />} />
             <Route path="/DeepL" element={<DeepL />} />

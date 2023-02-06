@@ -16,15 +16,26 @@ exports.decodeToken = void 0;
 // Imports
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const decodeToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
-    let secret = "";
-    jsonwebtoken_1.default.verify(token, "process.env.SECRET_JWTyesiknowthisdoesnotworkbutatleastnowitsaveryhardkeytoguessifyoudontbelievemegiveitatrycloseyoureyesthinkofsomethingandifitisexactlythisstringiwillgiveyou2euro50andiwillbuyyouasnickers", function (err, decoded) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (err) {
-                return { error: "invalid signature" };
-            }
-            secret = decoded;
-        });
-    });
-    return secret;
+    const secretKeys = [
+        "process.env.SECRET_JWTyesiknowthisdoesnotworkbutatleastnowitsaveryhardkeytoguessifyoudontbelievemegiveitatrycloseyoureyesthinkofsomethingandifitisexactlythisstringiwillgiveyou2euro50andiwillbuyyouasnickers",
+        "TTS1T",
+    ];
+    let decoded = "";
+    for (const secretKey of secretKeys) {
+        try {
+            decoded = jsonwebtoken_1.default.verify(token, secretKey);
+            console.log(secretKey);
+            break;
+        }
+        catch (error) {
+            continue;
+        }
+    }
+    console.log("jwtmechanism", decoded);
+    if (decoded.i) {
+        decoded = { userId: decoded.i };
+        console.log("works");
+    }
+    return decoded;
 });
 exports.decodeToken = decodeToken;

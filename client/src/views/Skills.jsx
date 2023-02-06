@@ -23,6 +23,7 @@ import { useContext, useState } from "react";
 
 function Skills() {
   const { personalInfo } = useContext(UserContext);
+
   const [opacity, setOpacity] = useState(0);
   const [skillStory, setSkillStory] = useState(
     <div>
@@ -172,6 +173,7 @@ function Skills() {
               key={`${index}g`}
               style={{
                 width: "100px",
+
                 height: "100px",
                 borderRadius: "50%",
                 position: "fixed",
@@ -197,7 +199,7 @@ function Skills() {
                     width: "1.9vw",
                     height: "auto",
                     opacity,
-                    transition: "opacity 1.5s ease-in-out",
+                    transition: `opacity ${0 + index / 5}s ease-in-out`,
                   }}
                   onLoad={() => {
                     setOpacity(1);
@@ -245,40 +247,44 @@ function Skills() {
       >
         {skillArray.map((skill, index) => {
           return (
-            <table>
-              <tbody>
-                <tr
-                  style={{
-                    background: `${
-                      index % 2 === 0 ? personalInfo.webColor1 : "white"
-                    }`,
-                  }}
-                  key={`${index}a`}
-                >
-                  <td>
-                    <img
-                      key={`${index}b`}
-                      style={{ width: "0.9vw", height: "auto" }}
-                      src={skill.imgLink}
-                      alt="logo"
-                    />
-                  </td>
+            <tr
+              style={{
+                background: `${
+                  index % 2 === 0 ? personalInfo.webColor1 : "white"
+                }`,
+              }}
+              key={`${index}a`}
+            >
+              <td>
+                <img
+                  key={`${index}b`}
+                  style={{ width: "0.9vw", height: "auto" }}
+                  src={skill.imgLink}
+                  alt="logo"
+                />
+              </td>
 
-                  <td key={`${index}c`}>{skill.name}</td>
-                  <td key={`${index}d`}>
-                    {new Array(5)
-                      .fill(0)
-                      .map((_, index) =>
-                        skill.skillScore <= index ? (
-                          <SaveOutlinedIcon key={`${index}e`} />
-                        ) : (
-                          <SaveIcon key={`${index}f`} />
-                        )
-                      )}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              <td style={{ fontSize: "1vw" }} key={`${index}c`}>
+                {skill.name}
+              </td>
+              <td key={`${index}d`}>
+                {new Array(5)
+                  .fill(0)
+                  .map((_, index) =>
+                    skill.skillScore <= index ? (
+                      <SaveOutlinedIcon
+                        style={{ fontSize: "1.5vw" }}
+                        key={`${index}e`}
+                      />
+                    ) : (
+                      <SaveIcon
+                        style={{ fontSize: "1.5vw" }}
+                        key={`${index}f`}
+                      />
+                    )
+                  )}
+              </td>
+            </tr>
           );
         })}
       </div>
