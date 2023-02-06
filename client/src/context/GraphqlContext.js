@@ -1,11 +1,10 @@
-import { createContext, useEffect, useState, useRef, useContext } from "react";
+// Imports
+import { createContext, useState, useRef } from "react";
 import { triggerBase64Download } from "common-base64-downloader-react";
 import { dev } from "../config/config";
 
-import { useLocation } from "react-router";
-
+// Exports
 export const UserContext = createContext();
-
 export const UserContextProvider = (props) => {
   const [messages, setMessages] = useState("");
   const [pauseButtonPosition, setpauseButtonPosition] = useState(23 * 1.37);
@@ -93,12 +92,10 @@ export const UserContextProvider = (props) => {
     <UserContext.Provider
       value={{
         UserGraphQLHandler,
-
         loggedIn,
         setLoggedIn,
         errorMessages,
         setErrorMessages,
-
         messages,
         setMessages,
         setPersonalInfo,

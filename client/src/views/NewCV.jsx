@@ -1,3 +1,8 @@
+/////////////////////////////////////Sven's//Coding/ Date: 06-02-2023 13:11 ////////////
+// Create a new CV
+/////////////////////////////////////////gnidoC//s'nevS////////////////////////////////
+
+// Imports
 import React, { useContext } from "react";
 import { UserContext } from "../context/GraphqlContext";
 import { TextField } from "@mui/material";
@@ -16,90 +21,45 @@ function NewCV() {
     console.log(personalInfo);
   };
 
+  const textFields = [
+    { id: "companyLogo", label: "company logo png link" },
+    { id: "companyName", label: "company name" },
+    { id: "webColor1", label: "CV and taskbar Color" },
+    { id: "webColor2", label: "textColor CV" },
+    { id: "webColor3", label: "SkillSpinner" },
+    { id: "recruiterName", label: "Name of recruiter" },
+    { id: "phoneNumber", label: "phone Number", disabled: true },
+    { id: "emailAdress", label: "email", disabled: true },
+    { id: "aboutCompany", label: "about Company", disabled: true },
+  ];
+
   return (
-    <div>
-      <div>
-        <TextField
-          required
-          disabled={false}
-          id="emailAdress"
-          label="email"
-          value={personalInfo.emailAdress ? personalInfo.emailAdress : ""}
-          onChange={textInputHandler}
-        />{" "}
-        <br /> <br />
-        <TextField
-          required
-          disabled={false}
-          id="companyLogo"
-          label="company logo png link"
-          value={personalInfo.companyLogo ? personalInfo.companyLogo : ""}
-          onChange={textInputHandler}
-        />{" "}
-        <br /> <br />
-        <TextField
-          disabled={false}
-          id="aboutCompany"
-          label="about company"
-          value={personalInfo.aboutCompany ? personalInfo.aboutCompany : ""}
-          onChange={textInputHandler}
-        />
-        <br /> <br />
-        <TextField
-          required
-          disabled={false}
-          id="companyName"
-          label="company name"
-          value={personalInfo.companyName ? personalInfo.companyName : ""}
-          onChange={textInputHandler}
-        />{" "}
-        <br /> <br />
-        <TextField
-          disabled={false}
-          id="phoneNumber"
-          label="Phone Number"
-          value={personalInfo.webColor2 ? personalInfo.recruiterName : ""}
-          onChange={textInputHandler}
-        />
-        <br /> <br />
-        <TextField
-          required
-          disabled={false}
-          id="webColor1"
-          label="webpage color 1"
-          value={personalInfo.webColor1 ? personalInfo.webColor1 : ""}
-          onChange={textInputHandler}
-        />{" "}
-        <br /> <br />
-        <TextField
-          disabled={false}
-          id="webColor2"
-          label="webpage color 2 used for CV text"
-          value={personalInfo.webColor2 ? personalInfo.webColor2 : ""}
-          onChange={textInputHandler}
-        />{" "}
-        <br /> <br />
-        <TextField
-          disabled={false}
-          id="webColor3"
-          label="webpage color 3 used for secondairy styling"
-          value={personalInfo.webColor3 ? personalInfo.webColor3 : ""}
-          onChange={textInputHandler}
-        />{" "}
-        <br /> <br />
-        <TextField
-          disabled={false}
-          id="recruiterName"
-          label="name of recruiter"
-          value={
-            personalInfo.recruiterName === personalInfo.companyName
-              ? personalInfo.companyName
-              : personalInfo.recruiterName
-          }
-          onChange={textInputHandler}
-        />
-        <Button onClick={sendFormHandler}>Send</Button>
-      </div>
+    <div
+      style={{
+        marginTop: "5vw",
+
+        margin: "auto",
+        width: "15vw",
+        border: "1px solid black",
+        padding: "10px",
+      }}
+    >
+      {textFields.map((field) => {
+        return (
+          <div>
+            <TextField
+              required
+              disabled={field.disabled ? field.disabled : false}
+              id={field.id}
+              label={field.label}
+              value={personalInfo[field.id] ? personalInfo[field.id] : ""}
+              onChange={textInputHandler}
+            />
+            <br /> <br />
+          </div>
+        );
+      })}
+      <Button onClick={sendFormHandler}>Send</Button>
     </div>
   );
 }
