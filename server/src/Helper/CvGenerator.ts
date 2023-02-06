@@ -7,6 +7,10 @@ const QRCode = require("qrcode");
 const blobStream = require("blob-stream");
 
 console.log(dev);
+let preFix = "server/";
+if (dev) {
+  preFix = "";
+}
 
 const mmToPtX = (x) => {
   const xProcent = x / 2.1;
@@ -23,11 +27,10 @@ const mmToPtY = (y) => {
 const ImgColorConvert = async (file, textHexColor) => {
   return new Promise((resolve, reject) => {
     console.log(textHexColor, "valid");
+
     replaceColor(
       {
-        image: fs.readFileSync(
-          dev ? `./logos/originals/${file}` : `server/${file}`
-        ),
+        image: fs.readFileSync(`${preFix}src/logos/originals/${file}`),
         colors: {
           type: "hex",
           targetColor: "#000000",
@@ -36,18 +39,11 @@ const ImgColorConvert = async (file, textHexColor) => {
       },
       (err, jimpObject) => {
         if (err) return console.log(err);
-        jimpObject.write(
-          fs.createWriteStream(
-            dev
-              ? `../logos/${textHexColor}${file}`
-              : `server/${textHexColor}${file}`
-          ),
-          (err) => {
-            if (err) {
-              return console.log(err);
-            } else resolve(err);
-          }
-        );
+        jimpObject.write(`${preFix}src/logos/${textHexColor}${file}`, (err) => {
+          if (err) {
+            return console.log(err);
+          } else resolve(err);
+        });
       }
     );
   });
@@ -55,7 +51,7 @@ const ImgColorConvert = async (file, textHexColor) => {
 const QRCodeGenrator = async (text) => {
   try {
     console.log(await QRCode.toDataURL(text));
-    await QRCode.toFile(dev ? "pqr.png" : "server/pqr.png", text, {
+    await QRCode.toFile(`${preFix}src/qr/pqr.png`, text, {
       errorCorrectionLevel: "M",
     });
   } catch (err) {
@@ -78,7 +74,7 @@ const docCreator = async (
   const linkAdress = `http://206.189.52.145:3000/recruiter/${token}`;
   // const textColor = "#0c1e4d";
   await QRCodeGenrator(linkAdress);
-  if (!fs.existsSync(`server/${textColor}JS.png`)) {
+  if (!fs.existsSync(`${preFix}src/logos/${textColor}JS.png`)) {
     await ImgColorConvert("HTMLCSS.png", textColor);
     await ImgColorConvert("JS.png", textColor);
     await ImgColorConvert("ts.png", textColor);
@@ -129,13 +125,13 @@ const docCreator = async (
       .fill(hexColor);
     // draw some text
     //595.28 x 841.89
-    doc.font(dev ? "Archivo-Bold.ttf" : "server/Archivo-Bold.ttf");
+    doc.font(`${preFix}src/fonts/Archivo-Bold.ttf`);
     doc.fillColor(textColor);
     doc.fontSize(mFont);
     // doc.image("CVnoBackground.png", 0, 0, { width: 595.28 });
-    doc.text(`Generated for ${name}`, 270, 17);
+    doc.text(`Personalised for ${name}`, 270, 17);
     doc.image(
-      fs.readFileSync(dev ? `${imageName}` : `server/${imageName}`),
+      fs.readFileSync(`${preFix}src/companylogos/${imageName}`),
       225,
       5,
       {
@@ -168,7 +164,7 @@ const docCreator = async (
     console.log("init");
     // QR Code and directLink
     doc.image(
-      fs.readFileSync(dev ? "pqr.png" : "server/pqr.png"),
+      fs.readFileSync(`${preFix}src/qr/pqr.png`),
       mmToPtX(8),
       mmToPtY(10),
       {
@@ -266,75 +262,83 @@ const docCreator = async (
 
     const skillArray = [
       {
-        imgLink: `server/${textColor}JS.png`,
+        imgLink: `${preFix}src/logos/${textColor}JS.png`,
         name: "JavaScript",
         skillScore: 4,
       },
       {
-        imgLink: `server/${textColor}ts.png`,
+        imgLink: `${preFix}src/logos/${textColor}ts.png`,
         name: "Typescript",
         skillScore: 2,
       },
       {
-        imgLink: `server/${textColor}HTMLCSS.png`,
+        imgLink: `${preFix}src/logos/${textColor}HTMLCSS.png`,
         name: "HTML5/CSS3",
         skillScore: 3,
       },
       {
-        imgLink: `server/${textColor}mongo.png`,
+        imgLink: `${preFix}src/logos/${textColor}mongo.png`,
         name: "MongoDB",
         skillScore: 2,
       },
       {
-        imgLink: `server/${textColor}Sqlite.png`,
+        imgLink: `${preFix}src/logos/${textColor}Sqlite.png`,
         name: "SQLite3",
         skillScore: 2,
       },
       {
-        imgLink: `server/${textColor}graphql.png`,
+        imgLink: `${preFix}src/logos/${textColor}graphql.png`,
         name: "GraphQL",
         skillScore: 3,
       },
       {
-        imgLink: `server/${textColor}github.png`,
+        imgLink: `${preFix}src/logos/${textColor}github.png`,
         name: "Git/Github",
         skillScore: 2,
       },
       {
-        imgLink: `server/${textColor}bootstrap.png`,
+        imgLink: `${preFix}src/logos/${textColor}bootstrap.png`,
         name: "Bootstrap",
         skillScore: 2,
       },
       {
-        imgLink: `server/${textColor}nodejs.png`,
+        imgLink: `${preFix}src/logos/${textColor}nodejs.png`,
         name: "NodeJS",
         skillScore: 3,
       },
       {
-        imgLink: `server/${textColor}express.png`,
+        imgLink: `${preFix}src/logos/${textColor}express.png`,
         name: "Express",
         skillScore: 3,
       },
       {
-        imgLink: `server/${textColor}wordpress.png`,
+        imgLink: `${preFix}src/logos/${textColor}wordpress.png`,
         name: "Wordpress",
         skillScore: 3,
       },
       {
-        imgLink: `server/${textColor}mui.png`,
+        imgLink: `${preFix}src/logos/${textColor}mui.png`,
         name: "MaterialUI",
         skillScore: 2,
       },
       {
-        imgLink: `server/${textColor}react.png`,
+        imgLink: `${preFix}src/logos/${textColor}react.png`,
         name: "ReactJS",
         skillScore: 3,
       },
 
-      { imgLink: `server/${textColor}aws.png`, name: "AWS", skillScore: 2 },
-      { imgLink: `server/${textColor}groq.png`, name: "GROQ", skillScore: 2 },
       {
-        imgLink: `server/${textColor}cplusplus.png`,
+        imgLink: `${preFix}src/logos/${textColor}aws.png`,
+        name: "AWS",
+        skillScore: 2,
+      },
+      {
+        imgLink: `${preFix}src/logos/${textColor}groq.png`,
+        name: "GROQ",
+        skillScore: 2,
+      },
+      {
+        imgLink: `${preFix}src/logos/${textColor}cplusplus.png`,
         name: "C++",
         skillScore: 1,
       },
@@ -389,14 +393,14 @@ const docCreator = async (
       const positionXmm = 85;
       doc
         .fontSize(sFont)
-        .font(dev ? "Archivo-Bold.ttf" : "server/Archivo-Bold.ttf")
+        .font(`${preFix}src/fonts/Archivo-Bold.ttf`)
         .text(jobDate, mmToPtX(positionXmm), mmToPtY(positionYmm), {
           align: "left",
           continued: true,
         })
-        .font(dev ? "Archivo-SuperBold.ttf" : "server/Archivo-SuperBold.ttf")
+        .font(`${preFix}src/fonts/Archivo-SuperBold.ttf`)
         .text(` ${jobRole}`)
-        .font(dev ? "Archivo-Bold.ttf" : "server/Archivo-Bold.ttf")
+        .font(`${preFix}src/fonts/Archivo-Bold.ttf`)
         .text(company);
       taskArray.forEach((element) => {
         doc.text(`• ${element}`, mmToPtX(positionXmm + 2));
@@ -467,9 +471,9 @@ const docCreator = async (
 
     doc
       .fontSize(sFont)
-      .font(dev ? "Archivo-SuperBold.ttf" : "server/Archivo-SuperBold.ttf")
+      .font(`${preFix}src/fonts/Archivo-SuperBold.ttf`)
       .text(`Projects:`, mmToPtX(baseLineX), mmToPtY(baseLineY + 130))
-      .font(dev ? "Archivo-Bold.ttf" : "server/Archivo-Bold.ttf")
+      .font(`${preFix}src/fonts/Archivo-Bold.ttf`)
       .text(`Bottle Luminous`)
       .text(`Party Store records`)
       .text(`Berlin Bikeroutes`)
@@ -534,9 +538,7 @@ const docCreator = async (
 
     await doc.pipe(
       fs.createWriteStream(
-        dev
-          ? `CVSvenDudink${companyName}.pdf`
-          : `server/CVSvenDudink${companyName}.pdf`
+        `${preFix}src/createdcvs/CVSvenDudink${companyName}.pdf`
       )
     );
 

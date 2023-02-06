@@ -2,6 +2,7 @@ import ButtonAppBar from "./components/ButtonAppBar";
 import { UserContextProvider } from "./context/GraphqlContext.js";
 import Watermark from "@uiw/react-watermark";
 import { useState, useEffect, useContext } from "react";
+import { fileLoaded } from "./config/config";
 
 import React from "react";
 
@@ -24,6 +25,7 @@ function App() {
   const [frames, setFrames] = useState(0);
   const [companyName, setCompanyName] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
+  console.log(fileLoaded);
 
   return (
     <BrowserRouter>

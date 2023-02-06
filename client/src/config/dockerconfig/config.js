@@ -1,3 +1,5 @@
-const dev = true;
+const dev = false;
+const fileLoaded = "build";
+const serverAdress = "http://206.189.52.145:8080/";
 
-export { dev };
+export { dev, fileLoaded, serverAdress };

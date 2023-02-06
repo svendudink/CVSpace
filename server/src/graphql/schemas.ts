@@ -13,6 +13,7 @@ type User {
     recruiterName: String
     webColor1: String
     webColor2: String
+    webColor3: String
     id: String
     token: String
     file: String
@@ -33,6 +34,7 @@ input UserInputData {
     recruiterName: String
     webColor1: String
     webColor2: String
+    webColor3: String
     id: String
     token: String
 }

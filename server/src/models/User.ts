@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  webColor3: {
+    type: String,
+    required: false,
+  },
 
   posts: [
     {

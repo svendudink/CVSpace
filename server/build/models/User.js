@@ -37,6 +37,10 @@ const userSchema = new mongoose_1.default.Schema({
         type: String,
         required: false,
     },
+    webColor3: {
+        type: String,
+        required: false,
+    },
     posts: [
         {
             type: mongoose_1.default.Schema.Types.ObjectId,
