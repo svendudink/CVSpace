@@ -12,6 +12,7 @@ function NewCV() {
   const { personalInfo, setPersonalInfo, UserGraphQLHandler } =
     useContext(UserContext);
 
+  // dealing with the text input
   const textInputHandler = (e) => {
     setPersonalInfo({ ...personalInfo, [e.target.id]: e.target.value });
   };
